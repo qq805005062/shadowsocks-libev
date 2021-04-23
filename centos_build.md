@@ -68,7 +68,7 @@ Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 ```
-#### server start script
+#### client start script
 ```
 [Unit]
 Description=Shadowsocks-libev Client
