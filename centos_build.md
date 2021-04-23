@@ -26,6 +26,7 @@ sudo mkdir /etc/shadowsocks-libev
 sudo vi /etc/shadowsocks-libev/config.json
 ```
 复制粘贴如下内容（注意修改密码“password”）：
+#### Server config
 ```
 {
      "server":"0.0.0.0",
@@ -37,9 +38,22 @@ sudo vi /etc/shadowsocks-libev/config.json
      "fast_open": false
  }
  ```
+ #### client config
+ ```
+ {
+	"server": "example.zzz.buzz",
+	"server_port": 10443,
+	"local_port": 1080,
+	"password": "zzz.buzz",
+	"method": "aes-256-cfb",
+	"mode": "tcp_and_udp",
+	"timeout": 600
+}
+ ```
 ### 4、创建Shadowsocks-libev.service配置文件
 sudo vi /etc/systemd/system/shadowsocks-libev.service
 复制粘贴：
+#### server start script
 ```
 [Unit]
 Description=Shadowsocks-libev Server
@@ -49,6 +63,21 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/ss-server -c /etc/shadowsocks-libev/config.json -u
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+```
+#### server start script
+```
+[Unit]
+Description=Shadowsocks-libev Client
+Documentation=https://shadowsocks.org/en/
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ss-local -c /etc/shadowsocks-libev/config.json -u
 Restart=on-abort
 
 [Install]
